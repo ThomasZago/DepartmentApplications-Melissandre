@@ -16,21 +16,13 @@ using System.Windows.Shapes;
 namespace MelissandreDepartment
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Logique d'interaction pour SignInPage.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class SignInPage : Page
     {
-        public MainWindow()
+        public SignInPage()
         {
             InitializeComponent();
-            NavigateToSignIn();
-        }
-
-        public void NavigateToSignIn()
-        {
-            SignInPage signInPage = new SignInPage();
-            mainFrame.Content = signInPage;
         }
     }
 }
-
