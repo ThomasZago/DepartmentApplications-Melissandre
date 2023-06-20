@@ -11,10 +11,4 @@
     <ProjectReference Include="..\MelissandreServiceLibrary\MelissandreServiceLibrary.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\" />
-    <Folder Include="DAO\" />
-    <Folder Include="ViewModel\" />
-  </ItemGroup>
-
 </Project>

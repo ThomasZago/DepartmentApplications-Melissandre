@@ -1,57 +1,62 @@
-﻿<Page x:Class="MelissandreDepartment.SignInPage"
+﻿<Page x:Class="MelissandreDepartment.View.SignInPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MelissandreDepartment"
+      xmlns:vm="clr-namespace:MelissandreDepartment.ViewModel"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="600" d:DesignWidth="800"
       Title="SignInPage"
-      Height="450">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition MaxWidth="450" MinWidth="320"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+      Height="450"
+      DataContext="{Binding Source={x:Static vm:SignInViewModel.Instance}}">
+    <Grid MinWidth="350" MinHeight="450" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition MaxWidth="450" MinWidth="320"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <Grid Grid.Row="1" Grid.Column="1" Margin="0,5,0,15">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource TitleTextStyle}" Text="Log in"/>
-            <TextBlock Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource LightTextStyle}" Text="Please sign in to your existing account"/>
-        </Grid>
+            <Grid Grid.Row="1" Grid.Column="1" Margin="0,5,0,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource TitleTextStyle}" Text="Log in"/>
+                <TextBlock Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource LightTextStyle}" Text="Please sign in to your existing account"/>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource ErrorMessageStyle}" Text="{Binding Message}"/>
 
-        <Grid Grid.Row="2" Grid.Column="1" Margin="0,5,0,15">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="EMAIL"/>
-            <TextBox Grid.Row="1" Style="{StaticResource TextBoxStyle}"/>
+            </Grid>
+
+            <Grid Grid.Row="2" Grid.Column="1" Margin="0,5,0,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="EMAIL"/>
+                <TextBox Grid.Row="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <Grid Grid.Row="3" Grid.Column="1" Margin="0,5,0,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="PASSWORD"/>
+                <TextBox Grid.Row="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid>
+            <CheckBox Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource CustomCheckboxStyle}" Content="Remember me" HorizontalAlignment="Left"/>
+            <Button Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource TextButtonStyle}" Content="Forget your password?" HorizontalAlignment="Right"/>
+            <Button Margin="0,5,0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN" Command="{Binding SignInCommand}"/>
         </Grid>
-        <Grid Grid.Row="3" Grid.Column="1" Margin="0,5,0,15">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="PASSWORD"/>
-            <TextBox Grid.Row="1" Style="{StaticResource TextBoxStyle}"/>
-        </Grid>
-        <CheckBox Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource CustomCheckboxStyle}" Content="Remember me" HorizontalAlignment="Left"/>
-        <Button Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource TextButtonStyle}" Content="Forget your password?" HorizontalAlignment="Right"/>
-        <Button Margin="0,5,0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN"/>
-    </Grid>
 </Page>
