@@ -39,8 +39,12 @@ namespace MelissandreDepartment.View
             if (role == "Technical")
             {
                 MainTechnicalWindow.Instance.Show();
-                Close();
             }
+            else if (role == "Commercial")
+            {
+                MainCommercialWindow.Instance.Show();
+            }
+            Close();
         }
     }
 }

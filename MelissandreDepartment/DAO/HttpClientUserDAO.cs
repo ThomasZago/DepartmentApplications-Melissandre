@@ -12,8 +12,6 @@ namespace MelissandreDepartment.DAO
 {
     public class HttpClientUserDAO
     {
-        private readonly String apiUrl = "https://temporaryID/api/service";
-        private readonly HttpClient _httpClient;
         private static HttpClientUserDAO _instance;
         private static readonly object _lockObject = new object();
 
@@ -37,16 +35,16 @@ namespace MelissandreDepartment.DAO
 
         private HttpClientUserDAO()
         {
-            _httpClient = new HttpClient();
+
         }
 
         public async Task<(bool success, string role, string token, string message)> Login(string email, string password)
         {
-            String requestUrl = $"{apiUrl}/login?email={email}&password={password}";
+            String requestUrl = $"{HttpClientManager.ApiUrl}/login?email={email}&password={password}";
 
             try
             {
-                HttpResponseMessage response = await _httpClient.GetAsync(requestUrl);
+                HttpResponseMessage response = await HttpClientManager.HttpClient.GetAsync(requestUrl);
 
                 if (response.IsSuccessStatusCode)
                 {

@@ -99,7 +99,6 @@ namespace MelissandreDepartment.ViewModel
 
         private async void SignIn()
         {
-            LoginSuccess?.Invoke(this, "Technical");
             try
             {
                 (bool success, string role, string token, string message) = await authDAO.Login(email, password);
