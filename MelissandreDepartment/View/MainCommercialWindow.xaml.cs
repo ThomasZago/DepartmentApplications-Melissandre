@@ -20,31 +20,10 @@ namespace MelissandreDepartment.View
     /// </summary>
     public partial class MainCommercialWindow : Window
     {
-        private static MainCommercialWindow instance;
-        private static readonly object lockObject = new object();
-
-        private MainCommercialWindow()
+        public MainCommercialWindow()
         {
             InitializeComponent();
             InitializeNavigation();
-        }
-
-        public static MainCommercialWindow Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new MainCommercialWindow();
-                        }
-                    }
-                }
-                return instance;
-            }
         }
 
         private void InitializeNavigation()

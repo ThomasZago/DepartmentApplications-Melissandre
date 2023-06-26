@@ -20,37 +20,16 @@ namespace MelissandreDepartment.View
     /// </summary>
     public partial class MainTechnicalWindow : Window
     {
-        private static MainTechnicalWindow instance;
-        private static readonly object lockObject = new object();
-
-        private MainTechnicalWindow()
+        public MainTechnicalWindow()
         {
             InitializeComponent();
             InitializeNavigation();
         }
 
-        public static MainTechnicalWindow Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    lock (lockObject)
-                    {
-                        if (instance == null)
-                        {
-                            instance = new MainTechnicalWindow();
-                        }
-                    }
-                }
-                return instance;
-            }
-        }
-
         private void InitializeNavigation()
         {
             Navigation.Instance.Initialize(mainFrame);
-            Navigation.Instance.NavigateTo("SignInPage");
+            Navigation.Instance.NavigateTo("ServiceAccountManagementView");
         }
     }
 }
