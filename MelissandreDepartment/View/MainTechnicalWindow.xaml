@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Title="MainTechnicalWindow" Height="450" Width="800">
     <Grid>
-        <Frame x:Name="mainFrame"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="95"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Frame Background="#F8F8F8"  x:Name="mainFrame"/>
+        </ScrollViewer>
     </Grid>
 </Window>

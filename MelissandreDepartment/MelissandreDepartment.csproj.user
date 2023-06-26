@@ -13,6 +13,9 @@
     <Compile Update="View\MainTechnicalWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ServiceAccountManagementView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\SignInPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -22,6 +25,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MainTechnicalWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\ServiceAccountManagementView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\StartWindow.xaml">
