@@ -1,7 +1,10 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converter="clr-namespace:MelissandreServiceLibrary.Converter">
+                    xmlns:converter="clr-namespace:MelissandreServiceLibrary.Converter"
+                    xmlns:enum="clr-namespace:MelissandreServiceLibrary.Enum">
+    
     <converter:NonEmptyStringToVisibilityConverter x:Key="NonEmptyStringToVisibilityConverter"/>
+    <converter:EnumToListConverter x:Key="EnumToListConverter"/>
     <SolidColorBrush x:Key="ChartGrey" Color="#2c3d4d"/>
     <SolidColorBrush x:Key="ChartDarkBlue" Color="#003049"/>
     <SolidColorBrush x:Key="ChartBlue" Color="#669bbc"/>
@@ -200,6 +203,16 @@
     <Style x:Key="ErrorMessageStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource ChartDarkRed}"/>
         <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Converter={StaticResource NonEmptyStringToVisibilityConverter}}" />
+    </Style>
+
+    <Style x:Key="ComboboxClientAccountStyle" TargetType="ComboBox">
+        <Setter Property="ItemsSource" Value="{Binding Source={x:Type enum:ClientAccountType}, Converter={StaticResource EnumToListConverter}}"/>
+    </Style>
+    <Style x:Key="ComboboxAccountStatusStyle" TargetType="ComboBox">
+        <Setter Property="ItemsSource" Value="{Binding Source={x:Type enum:AccountStatus}, Converter={StaticResource EnumToListConverter}}"/>
+    </Style>
+    <Style x:Key="ComboboxDepartmentAccountStyle" TargetType="ComboBox">
+        <Setter Property="ItemsSource" Value="{Binding Source={x:Type enum:DepartmentAccountType}, Converter={StaticResource EnumToListConverter}}"/>
     </Style>
     
 </ResourceDictionary>
