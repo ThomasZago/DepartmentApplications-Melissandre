@@ -2,7 +2,7 @@
 {
     public enum DepartmentAccountType
     {
-        Technical,
-        Commercial
+        technical,
+        commercial
     }
 }

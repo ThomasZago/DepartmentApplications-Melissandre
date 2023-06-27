@@ -35,7 +35,7 @@
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource TitleTextStyle}" Text="Log in"/>
                 <TextBlock Grid.Row="1" HorizontalAlignment="Center" Style="{StaticResource LightTextStyle}" Text="Please sign in to your existing account"/>
-                <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource ErrorMessageStyle}" Text="{Binding Message}"/>
+                <TextBlock Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource ErrorMessageStyle}" Text="{Binding Message}" TextWrapping="Wrap"/>
 
             </Grid>
 
@@ -55,8 +55,7 @@
                 <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="PASSWORD"/>
                 <TextBox Grid.Row="1" Style="{StaticResource TextBoxStyle}" Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
-            <CheckBox Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource CustomCheckboxStyle}" Content="Remember me" HorizontalAlignment="Left"/>
-            <Button Margin="0,5,0,15" Grid.Row="4" Grid.Column="1" Style="{StaticResource TextButtonStyle}" Content="Forget your password?" HorizontalAlignment="Right"/>
-            <Button Margin="0,5,0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN" Command="{Binding SignInCommand}"/>
+        <ComboBox Grid.Row="4" Grid.Column="1" SelectedItem="{Binding Type}" SelectedValue="Content" Style="{StaticResource ComboboxDepartmentAccountStyle}"/>
+        <Button Margin="0,5,0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN" Command="{Binding SignInCommand}"/>
         </Grid>
 </Page>

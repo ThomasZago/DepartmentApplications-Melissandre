@@ -36,13 +36,13 @@ namespace MelissandreDepartment.View
         }
         private void SignInViewModel_LoginSuccess(object sender, string role)
         {
-            if (role == "Technical")
+            if (role == "technical")
             {
-                MainTechnicalWindow.Instance.Show();
+                new MainTechnicalWindow().Show();
             }
-            else if (role == "Commercial")
+            else if (role == "commercial")
             {
-                MainCommercialWindow.Instance.Show();
+                new MainCommercialWindow().Show();
             }
             Close();
         }
