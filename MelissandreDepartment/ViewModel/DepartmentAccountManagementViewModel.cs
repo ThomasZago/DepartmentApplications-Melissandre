@@ -35,16 +35,32 @@ namespace MelissandreDepartment.ViewModel
         }
 
         public RelayCommand AddAccountCommand { get; set; }
-        private void AddAccount()
+
+        private async void AddAccount()
         {
-            DepartmentAccount account = new DepartmentAccount
+            DepartmentAccountType accountType = RoleFormParameter.Value;
+            string generatedPassword = GeneratePassword();
+
+            try
             {
-                Email = EmailFormParameter,
-                Role = (DepartmentAccountType)RoleFormParameter,
-                Status = AccountStatus.Active
-            };
-            // implement dao logic
-            Accounts.Add(account);
+                (bool success, string message) = await userDAO.RegisterAccount(EmailFormParameter, accountType.ToString(), generatedPassword);
+                Message = message;
+
+                if (success)
+                {
+                    DepartmentAccount account = new DepartmentAccount
+                    {
+                        Email = EmailFormParameter,
+                        Role = accountType,
+                        Status = AccountStatus.Active
+                    };
+                    Accounts.Add(account);
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = ex.Message;
+            }
         }
 
         private bool CanAddAccount()

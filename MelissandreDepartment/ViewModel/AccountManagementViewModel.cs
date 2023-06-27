@@ -7,6 +7,7 @@ using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Data;
+using MelissandreDepartment.DAO;
 using MelissandreDepartment.Model; // Assuming the Account class is in the MelissandreDepartment.Model namespace
 using MelissandreDepartment.Tool;
 using MelissandreServiceLibrary.Enum;
@@ -15,7 +16,7 @@ namespace MelissandreDepartment.ViewModel
 {
     public abstract class AccountManagementViewModel : INotifyPropertyChanged
     {
-        
+        protected HttpClientUserDAO userDAO;
         public RelayCommand DeleteAccountCommand { get; set; }
         public RelayCommand SendNewPasswordCommand { get; set; }
         public RelayCommand ActivateAccountsCommand { get; set; }
@@ -68,6 +69,7 @@ namespace MelissandreDepartment.ViewModel
         protected AccountManagementViewModel()
         {
             // Initialize the accounts collection and view
+            userDAO = HttpClientUserDAO.Instance;
             Accounts = new ObservableCollection<Account>();
             AccountsView = CollectionViewSource.GetDefaultView(Accounts);
             SendNewPasswordCommand = new RelayCommand((o) => SendNewPassword(o));
@@ -83,18 +85,60 @@ namespace MelissandreDepartment.ViewModel
         }
 
 
-        protected void SendNewPassword(object parameter)
+        protected async void SendNewPassword(object parameter)
         {
-            DepartmentAccount account = parameter as DepartmentAccount;
+            Account account = parameter as Account;
             if (account != null)
             {
-                //Implement DAO logic
+                if (account is ClientAccount clientAccount)
+                {
+                    // Cast to ClientAccount and implement DAO logic for sending a new password
+                    string email = clientAccount.Email;
+                    ClientAccountType accountType = clientAccount.Role;
+
+                    // Convert accountType to string
+                    string accountTypeString = accountType.ToString();
+
+                    try
+                    {
+                        (bool success, string message) = await userDAO.SendNewPassword(email, accountTypeString);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message; 
+                    }
+                }
+                else if (account is DepartmentAccount departmentAccount)
+                {
+                    // Cast to DepartmentAccount and implement DAO logic for sending a new password
+                    string email = departmentAccount.Email;
+                    DepartmentAccountType accountType = departmentAccount.Role;
+
+                    // Convert accountType to string
+                    string accountTypeString = accountType.ToString();
+
+                    try
+                    {
+                        (bool success, string message) = await userDAO.SendNewPassword(email, accountTypeString);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message;
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             else
             {
                 throw new NotImplementedException();
             }
         }
+
 
         protected void DeleteAccount(object parameter)
         {
@@ -157,6 +201,18 @@ namespace MelissandreDepartment.ViewModel
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        protected string GeneratePassword()
+        {
+            // Implement your password generation logic here
+            // Example: Generate a random alphanumeric password of length 8
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            var password = new string(Enumerable.Repeat(chars, 8)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+
+            return password;
         }
     }
 }

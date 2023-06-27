@@ -1,8 +1,6 @@
 ﻿using global::MelissandreDepartment.DAO;
 using global::MelissandreDepartment.Model;
 using global::MelissandreDepartment.Tool;
-using MelissandreDepartment.DAO;
-using MelissandreDepartment.Model;
 using MelissandreServiceLibrary.Enum;
 using System;
 using System.Collections.Generic;
@@ -12,8 +10,7 @@ namespace MelissandreDepartment.ViewModel
 {
     public class ClientAccountManagementViewModel : AccountManagementViewModel
     {
-        private HttpClientUserDAO userDAO;
-
+        
         public RelayCommand AddAccountCommand { get; set; }
         public RelayCommand GetClientCommand { get; set; }
 
@@ -41,7 +38,6 @@ namespace MelissandreDepartment.ViewModel
 
         private ClientAccountManagementViewModel()
         {
-            userDAO = HttpClientUserDAO.Instance;
             GetClientCommand = new RelayCommand(async o => await GetClient());
             AddAccountCommand = new RelayCommand((o) => AddAccount(), (o) => CanAddAccount());
             GetClientCommand.Execute(this);
@@ -72,17 +68,33 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        protected void AddAccount()
+        protected async void AddAccount()
         {
-            ClientAccount account = new ClientAccount
+
+            ClientAccountType accountType = RoleFormParameter.Value;
+            string generatedPassword = GeneratePassword();
+            try
             {
-                Email = EmailFormParameter,
-                Role = RoleFormParameter.Value,
-                Status = AccountStatus.Active
-            };
-            // implement DAO logic
-            Accounts.Add(account);
+                (bool success, string message) = await userDAO.RegisterAccount(EmailFormParameter, accountType.ToString(), generatedPassword);
+                Message = message;
+                if (success)
+                {
+                    ClientAccount account = new ClientAccount
+                    {
+                        Email = EmailFormParameter,
+                        Role = accountType,
+                        Status = AccountStatus.Active
+                    };
+                    Accounts.Add(account);
+                }
+            }
+            catch(Exception ex)
+            {
+                Message = ex.Message;
+            }
+            
         }
+
 
         private bool CanAddAccount()
         {
