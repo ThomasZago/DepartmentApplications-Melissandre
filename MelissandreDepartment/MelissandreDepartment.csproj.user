@@ -7,6 +7,9 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="View\ClientAccountManagementView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\MainTechnicalWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -15,6 +18,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="View\ClientAccountManagementView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\MainTechnicalWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
