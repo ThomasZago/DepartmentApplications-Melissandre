@@ -15,6 +15,7 @@ namespace MelissandreDepartment.ViewModel
         private HttpClientUserDAO userDAO;
 
         public RelayCommand AddAccountCommand { get; set; }
+        public RelayCommand GetClientCommand { get; set; }
 
         private ClientAccountType? roleFormParameter;
         public ClientAccountType? RoleFormParameter
@@ -37,25 +38,27 @@ namespace MelissandreDepartment.ViewModel
                 return instance;
             }
         }
+
         private ClientAccountManagementViewModel()
         {
             userDAO = HttpClientUserDAO.Instance;
-            //GetClientCommand = new RelayCommand(async o => await GetClient());
+            GetClientCommand = new RelayCommand(async o => await GetClient());
             AddAccountCommand = new RelayCommand((o) => AddAccount(), (o) => CanAddAccount());
+            GetClientCommand.Execute(this);
         }
 
-        /*private async Task GetClient()
+        private async Task GetClient()
         {
             try
             {
-                (bool success, string message, List<ClientAccount> clients) = await userDAO.GetClient();
+                (bool success, string message, List<ClientAccount> clients) = await userDAO.GetClients();
 
                 if (success)
                 {
                     // Handle the retrieved clients as needed
                     foreach (ClientAccount client in clients)
                     {
-                        // Do something with the client object
+                        Accounts.Add(client);
                     }
                 }
                 else
@@ -67,7 +70,7 @@ namespace MelissandreDepartment.ViewModel
             {
                 Message = $"An error occurred while retrieving clients: {ex.Message}\nPlease send this to your administrator.";
             }
-        }*/
+        }
 
         protected void AddAccount()
         {

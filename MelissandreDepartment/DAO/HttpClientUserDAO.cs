@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Windows;
+using MelissandreServiceLibrary.Enum;
+using Newtonsoft.Json.Linq;
 
 namespace MelissandreDepartment.DAO
 {
@@ -70,6 +72,67 @@ namespace MelissandreDepartment.DAO
                 String message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
                 return (false, message);
             }
+        }
+
+        public async Task<(bool success, string message, List<ClientAccount> clients)> GetClients()
+        {
+            List<ClientAccount> clients = new List<ClientAccount>();
+            bool successState = true;
+            string message = string.Empty;
+
+            try
+            {
+                foreach (ClientAccountType type in Enum.GetValues(typeof(ClientAccountType)))
+                {
+                    string requestUrl = $"{HttpClientManager.ApiUrl}/auth/get/{type}";
+                    HttpResponseMessage response = await HttpClientManager.HttpClient.GetAsync(requestUrl);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string jsonContent = await response.Content.ReadAsStringAsync();
+                        JArray jsonArray = JArray.Parse(jsonContent);
+
+                        // Extract the necessary information from the JSON array
+                        foreach (JObject jsonObject in jsonArray)
+                        {
+                            string typeString = jsonObject.Value<string>("type");
+                            if (Enum.TryParse(typeString, out ClientAccountType parsedType))
+                            {
+                                if (parsedType == type)
+                                {
+                                    ClientAccount client = new ClientAccount
+                                    {
+                                        Email = jsonObject.Value<string>("email"),
+                                        Role = parsedType,
+                                        Status = AccountStatus.Active
+                                        // Set other properties as needed
+                                    };
+                                    clients.Add(client);
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception($"Invalid client account type: {typeString}");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        successState = false;
+                        message += $"{response.StatusCode} : {response.ReasonPhrase}\n";
+                    }
+                }
+            }
+
+
+
+            catch (HttpRequestException exception)
+            {
+                successState = false;
+                message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+            }
+
+            return (successState, message, clients);
         }
     }
 }
