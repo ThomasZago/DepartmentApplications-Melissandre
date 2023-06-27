@@ -11,7 +11,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace MelissandreDepartment.ViewModel
 {
@@ -22,6 +25,9 @@ namespace MelissandreDepartment.ViewModel
         private static readonly object _lockObject = new object();
         private HttpClientUserDAO authDAO;
         public event EventHandler<string> LoginSuccess;
+
+
+
         public static SignInViewModel Instance
         {
             get
@@ -43,6 +49,8 @@ namespace MelissandreDepartment.ViewModel
         {
             authDAO = HttpClientUserDAO.Instance;
             SignInCommand = new RelayCommand((o) => SignIn(), (o) => CanSignIn());
+            TogglePasswordVisibilityCommand = new RelayCommand((o) => TogglePasswordVisibility());
+            TextBoxVisibility = Visibility.Hidden;
         }
 
         public RelayCommand SignInCommand { get; set; }
@@ -50,6 +58,8 @@ namespace MelissandreDepartment.ViewModel
         private string password;
         private string message;
         private string type;
+        private Visibility textBoxVisibility;
+        private Visibility passwordBoxVisibility;
 
         public string Type
         {
@@ -61,6 +71,26 @@ namespace MelissandreDepartment.ViewModel
                     type = value;
                     OnPropertyChanged(nameof(type));
                 }
+            }
+        }
+
+        public Visibility TextBoxVisibility
+        {
+            get { return textBoxVisibility; }
+            set
+            {
+                textBoxVisibility = value;
+                OnPropertyChanged(nameof(TextBoxVisibility));
+            }
+        }
+
+        public Visibility PasswordBoxVisibility
+        {
+            get { return passwordBoxVisibility; }
+            set
+            {
+                passwordBoxVisibility = value;
+                OnPropertyChanged(nameof(PasswordBoxVisibility));
             }
         }
 
@@ -90,6 +120,33 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
+        private bool isPasswordVisible;
+
+        public ICommand TogglePasswordVisibilityCommand { get;}
+
+        public bool IsPasswordVisible
+        {
+            get { return isPasswordVisible; }
+            set
+            {
+                isPasswordVisible = value;
+                UpdatePasswordVisibility();
+                OnPropertyChanged(nameof(IsPasswordVisible));
+            }
+        }
+
+        private void TogglePasswordVisibility()
+        {
+            IsPasswordVisible = !IsPasswordVisible;
+        }
+
+        private void UpdatePasswordVisibility()
+        {
+            PasswordBoxVisibility = IsPasswordVisible ? Visibility.Hidden : Visibility.Visible;
+            TextBoxVisibility = IsPasswordVisible ? Visibility.Visible : Visibility.Hidden;
+        }
+
+
         public string Message
         {
             get { return message; }
@@ -102,6 +159,7 @@ namespace MelissandreDepartment.ViewModel
                 }
             }
         }
+
 
         /// <summary>
         /// Raises OnPropertychangedEvent when property changes
