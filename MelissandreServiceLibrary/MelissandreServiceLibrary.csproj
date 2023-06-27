@@ -6,4 +6,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Icon\eye-closed-icon.png" />
+    <None Remove="Icon\eye-open-icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icon\eye-closed-icon.png">
+      <CustomToolNamespace>MelissandreServiceLibrary.Icon</CustomToolNamespace>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icon\eye-open-icon.png">
+      <CustomToolNamespace>MelissandreServiceLibrary.Icon</CustomToolNamespace>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
 </Project>

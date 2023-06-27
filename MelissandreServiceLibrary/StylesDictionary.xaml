@@ -248,6 +248,15 @@
         </Setter>
     </Style>
 
+    <Style TargetType="PasswordBox" x:Key="PasswordBoxStyle">
+        <Setter Property="Background" Value="#F0F5FA" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="15" />
+        <Setter Property="Foreground" Value="{StaticResource ChartGrey}" />
+        <Setter Property="FontFamily" Value="Sen" />
+        <Setter Property="FontSize" Value="16" />
+    </Style>
+
     <Style x:Key="TextBoxStyle" TargetType="TextBox">
         <Setter Property="Foreground" Value="{StaticResource ChartGrey}" />
         <Setter Property="Template">
@@ -279,6 +288,43 @@
         <Setter Property="Foreground" Value="{StaticResource ChartDarkRed}"/>
         <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Text, Converter={StaticResource NonEmptyStringToVisibilityConverter}}" />
     </Style>
+
+    <Style x:Key="EyeCheckboxStyle" TargetType="CheckBox">
+        <Setter Property="Foreground" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid>
+                        <ToggleButton x:Name="ToggleButton"
+                                          IsChecked="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsChecked, Mode=TwoWay}"
+                                          Background="Transparent"
+                                          BorderBrush="Transparent">
+                            <Grid>
+                                <Image x:Name="UncheckedIcon" Source="Icon\eye-closed-icon.png" Height="30"/>
+                                <Image x:Name="CheckedIcon" Source="Icon\eye-open-icon.png" Height="25"/>
+                            </Grid>
+                        </ToggleButton>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ToggleButton" Property="Background" Value="Transparent"/>
+                            <Setter TargetName="UncheckedIcon" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="CheckedIcon" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="False">
+                            <Setter TargetName="ToggleButton" Property="Background" Value="Transparent"/>
+                            <Setter TargetName="UncheckedIcon" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="CheckedIcon" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ToggleButton" Property="Background" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="CustomComboBoxStyle" TargetType="ComboBox">
         <Setter Property="Foreground" Value="Black" />
         <Setter Property="Background" Value="White" />
@@ -434,11 +480,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
-
-
-
-
-
 </ResourceDictionary>

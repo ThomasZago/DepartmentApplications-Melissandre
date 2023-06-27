@@ -5,8 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MelissandreDepartment.View"
         mc:Ignorable="d"
-        Title="MainCommercialWindow" Height="450" Width="800">
+        Title="MainCommercialWindow" Height="450" Width="800" MinHeight="600" MinWidth="450">
     <Grid>
-        <Frame x:Name="mainFrame"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="95"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Frame Background="#F8F8F8"  x:Name="mainFrame"/>
+        </ScrollViewer>
     </Grid>
 </Window>
