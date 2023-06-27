@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MelissandreDepartment"
         mc:Ignorable="d"
-        Title="StartWindow" Height="500" Width="450" ResizeMode="NoResize">
+        Title="StartWindow" Height="600" Width="450" ResizeMode="NoResize">
     <Grid>
         <Frame x:Name="mainFrame"/>
     </Grid>

@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Windows;
 
 namespace MelissandreDepartment.DAO
 {
@@ -38,30 +40,35 @@ namespace MelissandreDepartment.DAO
 
         }
 
-        public async Task<(bool success, string role, string token, string message)> Login(string email, string password)
+        public async Task<(bool success, string message)> Login(string email, string password, string type)
         {
-            String requestUrl = $"{HttpClientManager.ApiUrl}/login?email={email}&password={password}";
+            Dictionary<string, string> requestData = new Dictionary<string, string>();
+            requestData["email"] = email;
+            requestData["password"] = password;
+            requestData["type"] = type;
+            String requestUrl = $"{HttpClientManager.ApiUrl}/auth/add/login";
 
             try
             {
-                HttpResponseMessage response = await HttpClientManager.HttpClient.GetAsync(requestUrl);
+                string jsonContent = JsonConvert.SerializeObject(requestData);
+                HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
+                content.Headers.ContentType.CharSet = "UTF-8";
+                HttpResponseMessage response = await HttpClientManager.HttpClient.PostAsync(requestUrl, content);
                 if (response.IsSuccessStatusCode)
                 {
-                    String role = response.Headers.GetValues("Role").First();
-                    String token = response.Headers.GetValues("Token").First();
-                    return (true, role, token, null);
+                    return (true, null);
                 }
                 else
                 {
-                    String message = response.Headers.GetValues("message").FirstOrDefault("There was an error in the request. \nPlease retry later");
-                    return (false, null, null, message);
+                    String message = response.StatusCode + " : " + response.ReasonPhrase;
+                    return (false, message);
                 }
             }
             catch (HttpRequestException exception)
             {
                 String message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
-                return (false, null, null, message);
+                return (false, message);
             }
         }
     }

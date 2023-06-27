@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+
 namespace MelissandreDepartment.ViewModel
 {
     public class SignInViewModel : INotifyPropertyChanged
@@ -48,6 +49,20 @@ namespace MelissandreDepartment.ViewModel
         private string email;
         private string password;
         private string message;
+        private string type;
+
+        public string Type
+        {
+            get { return type; } 
+            set 
+            {
+                if (type != value)
+                {
+                    type = value;
+                    OnPropertyChanged(nameof(type));
+                }
+            }
+        }
 
         public string Email
         {
@@ -101,16 +116,15 @@ namespace MelissandreDepartment.ViewModel
         {
             try
             {
-                (bool success, string role, string token, string message) = await authDAO.Login(email, password);
+                (bool success, string message) = await authDAO.Login(email, password, type);
 
                 if (success)
                 {
-                    Message = $"Logged in successfully with role: {role}";
+                    Message = $"Logged in successfully with role: {type}";
                     ConnectedUser.Instance.Email = email;
                     ConnectedUser.Instance.Password = password;
-                    ConnectedUser.Instance.Role = role;
-                    ConnectedUser.Instance.SessionToken = token;
-                    LoginSuccess?.Invoke(this, role);
+                    ConnectedUser.Instance.Role = type;
+                    LoginSuccess?.Invoke(this, type);
                 }
                 else
                 {
@@ -119,7 +133,7 @@ namespace MelissandreDepartment.ViewModel
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred during login: {ex.Message}\nPlease send this to your administrator.");
+                Message = ($"An error occurred during login: {ex.Message}\nPlease send this to your administrator.");
             }
         }
 

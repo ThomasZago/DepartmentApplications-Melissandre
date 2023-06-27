@@ -87,9 +87,25 @@ namespace MelissandreDepartment.ViewModel
             ActivateAccountsCommand = new RelayCommand(o => ActivateAccounts(), o => CanActivateOrDeactivateAccounts());
             DeactivateAccountsCommand = new RelayCommand(o => DeactivateAccounts(), o => CanActivateOrDeactivateAccounts());
 
+            //Only for test purpose
+            DepartmentAccount account = new DepartmentAccount
+            {
+                Email = "thom.zago@gmail.com",
+                Id= 1,
+                Role = DepartmentAccountType.technical,
+                Status = AccountStatus.Active
+            };
+            Accounts.Add(account);
+            account = new DepartmentAccount
+            {
+                Email = "thom.zago2@gmail.com",
+                Id = 1,
+                Role = DepartmentAccountType.commercial,
+                Status = AccountStatus.Active
+            };
+            Accounts.Add(account);
         }
-
-        private void AddAccount()
+    private void AddAccount()
         {
             DepartmentAccount account = new DepartmentAccount
             {

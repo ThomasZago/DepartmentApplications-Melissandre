@@ -7,13 +7,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="View\MainCommercialWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\MainTechnicalWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\ServiceAccountManagementView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\SignInPage.xaml.cs">
@@ -21,13 +15,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="View\MainCommercialWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="View\MainTechnicalWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\ServiceAccountManagementView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\StartWindow.xaml">
