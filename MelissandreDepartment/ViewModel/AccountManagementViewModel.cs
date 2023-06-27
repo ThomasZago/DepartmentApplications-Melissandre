@@ -13,22 +13,22 @@ using MelissandreServiceLibrary.Enum;
 
 namespace MelissandreDepartment.ViewModel
 {
-    public class ServiceAccountManagementViewModel : INotifyPropertyChanged
+    public abstract class AccountManagementViewModel : INotifyPropertyChanged
     {
-        public RelayCommand AddAccountCommand { get; set; }
+        
         public RelayCommand DeleteAccountCommand { get; set; }
         public RelayCommand SendNewPasswordCommand { get; set; }
         public RelayCommand ActivateAccountsCommand { get; set; }
         public RelayCommand DeactivateAccountsCommand { get; set; }
 
-        private static ServiceAccountManagementViewModel instance;
-        public static ServiceAccountManagementViewModel Instance
+        private String message;
+        public String Message
         {
-            get
+            get { return String.IsNullOrEmpty(message) ? String.Empty : message; }
+            set
             {
-                if (instance == null)
-                    instance = new ServiceAccountManagementViewModel();
-                return instance;
+                message = value;
+                OnPropertyChanged(nameof(Message));
             }
         }
 
@@ -43,19 +43,8 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        private DepartmentAccountType? roleFormParameter;
-        public DepartmentAccountType? RoleFormParameter
-        {
-            get { return roleFormParameter; }
-            set
-            {
-                roleFormParameter = value;
-                OnPropertyChanged(nameof(RoleFormParameter));
-            }
-        }
-
-        private ObservableCollection<DepartmentAccount> accounts;
-        public ObservableCollection<DepartmentAccount> Accounts
+        private ObservableCollection<Account> accounts;
+        public ObservableCollection<Account> Accounts
         {
             get { return accounts; }
             set
@@ -76,57 +65,25 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        private ServiceAccountManagementViewModel()
+        protected AccountManagementViewModel()
         {
             // Initialize the accounts collection and view
-            Accounts = new ObservableCollection<DepartmentAccount>();
+            Accounts = new ObservableCollection<Account>();
             AccountsView = CollectionViewSource.GetDefaultView(Accounts);
-            AddAccountCommand = new RelayCommand(o => AddAccount(), o => CanAddAccount());
             SendNewPasswordCommand = new RelayCommand((o) => SendNewPassword(o));
             DeleteAccountCommand = new RelayCommand((o) => DeleteAccount(o)); 
             ActivateAccountsCommand = new RelayCommand(o => ActivateAccounts(), o => CanActivateOrDeactivateAccounts());
             DeactivateAccountsCommand = new RelayCommand(o => DeactivateAccounts(), o => CanActivateOrDeactivateAccounts());
+        }
 
-            //Only for test purpose
-            DepartmentAccount account = new DepartmentAccount
-            {
-                Email = "thom.zago@gmail.com",
-                Id= 1,
-                Role = DepartmentAccountType.technical,
-                Status = AccountStatus.Active
-            };
-            Accounts.Add(account);
-            account = new DepartmentAccount
-            {
-                Email = "thom.zago2@gmail.com",
-                Id = 1,
-                Role = DepartmentAccountType.commercial,
-                Status = AccountStatus.Active
-            };
-            Accounts.Add(account);
-        }
-    private void AddAccount()
-        {
-            DepartmentAccount account = new DepartmentAccount
-            {
-                Email = EmailFormParameter,
-                Role = (DepartmentAccountType)RoleFormParameter,
-                Status = AccountStatus.Active
-            };
-            // implement dao logic
-            Accounts.Add(account);
-        }
-        private bool CanAddAccount()
-        {
-            return RoleFormParameter.HasValue && IsValidEmail(EmailFormParameter);
-        }
-        private bool IsValidEmail(string email)
+        protected bool IsValidEmail(string email)
         {
             String pattern = @"^[\w\.-]+@[\w\.-]+\.\w+$";
             return Regex.IsMatch(email, pattern);
         }
 
-        private void SendNewPassword(object parameter)
+
+        protected void SendNewPassword(object parameter)
         {
             DepartmentAccount account = parameter as DepartmentAccount;
             if (account != null)
@@ -139,9 +96,9 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        private void DeleteAccount(object parameter)
+        protected void DeleteAccount(object parameter)
         {
-            DepartmentAccount account = parameter as DepartmentAccount;
+            Account account = parameter as Account;
             if (account != null)
             {
                 //Implement DAO logic
@@ -153,38 +110,38 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        private void ActivateAccounts()
+        protected void ActivateAccounts()
         {
-            List<DepartmentAccount> selectedAccounts = GetSelectedAccounts();
+            List<Account> selectedAccounts = GetSelectedAccounts();
             //Implement DAO logic
-            foreach (DepartmentAccount account in selectedAccounts)
+            foreach (Account account in selectedAccounts)
             {
                 account.Status = AccountStatus.Active;
             }
             AccountsView.Refresh();
         }
 
-        private void DeactivateAccounts()
+        protected void DeactivateAccounts()
         {
-            List<DepartmentAccount> selectedAccounts = GetSelectedAccounts();
+            List<Account> selectedAccounts = GetSelectedAccounts();
             //Implement DAO logic
-            foreach (DepartmentAccount account in selectedAccounts)
+            foreach (Account account in selectedAccounts)
             {
                 account.Status = AccountStatus.Inactive;
             }
             AccountsView.Refresh();
         }
 
-        private bool CanActivateOrDeactivateAccounts()
+        protected bool CanActivateOrDeactivateAccounts()
         {
             return GetSelectedAccounts().Any();
         }
 
-        private List<DepartmentAccount> GetSelectedAccounts()
+        protected List<Account> GetSelectedAccounts()
         {
-            List<DepartmentAccount> selectedAccounts = new List<DepartmentAccount>();
+            List<Account> selectedAccounts = new List<Account>();
 
-            foreach (DepartmentAccount account in Accounts)
+            foreach (Account account in Accounts)
             {
                 if (account.IsSelected)
                 {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MelissandreDepartment.Model
 {
-    public class Account
+    public abstract class Account
     {
         public int Id { get; set; }
         public string Email { get; set; }
