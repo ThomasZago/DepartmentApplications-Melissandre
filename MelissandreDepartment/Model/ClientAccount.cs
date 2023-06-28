@@ -10,6 +10,5 @@ namespace MelissandreDepartment.Model
     public class ClientAccount : Account
     {
         public ClientAccountType Role { get; set; }
-        public string UserName { get; set; }
     }
 }

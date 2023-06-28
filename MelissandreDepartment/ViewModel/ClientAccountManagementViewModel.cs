@@ -10,9 +10,6 @@ namespace MelissandreDepartment.ViewModel
 {
     public class ClientAccountManagementViewModel : AccountManagementViewModel
     {
-        
-        public RelayCommand AddAccountCommand { get; set; }
-        public RelayCommand GetClientCommand { get; set; }
 
         private ClientAccountType? roleFormParameter;
         public ClientAccountType? RoleFormParameter
@@ -40,6 +37,7 @@ namespace MelissandreDepartment.ViewModel
         {
             GetClientCommand = new RelayCommand(async o => await GetClient());
             AddAccountCommand = new RelayCommand((o) => AddAccount(), (o) => CanAddAccount());
+            DeleteAccountCommand = new RelayCommand((o) => DeleteAccount(o));
             GetClientCommand.Execute(this);
         }
 
@@ -47,7 +45,13 @@ namespace MelissandreDepartment.ViewModel
         {
             try
             {
-                (bool success, string message, List<ClientAccount> clients) = await userDAO.GetClients();
+                List<string> enumStringValues = new List<string>();
+
+                foreach (object value in Enum.GetValues(typeof(ClientAccountType)))
+                {
+                    enumStringValues.Add(value.ToString());
+                }
+                (bool success, string message, List<Account> clients) = await userDAO.GetClients(enumStringValues);
 
                 if (success)
                 {
@@ -57,10 +61,7 @@ namespace MelissandreDepartment.ViewModel
                         Accounts.Add(client);
                     }
                 }
-                else
-                {
-                    Message = message;
-                }
+                Message = message;
             }
             catch (Exception ex)
             {
@@ -75,12 +76,13 @@ namespace MelissandreDepartment.ViewModel
             string generatedPassword = GeneratePassword();
             try
             {
-                (bool success, string message) = await userDAO.RegisterAccount(EmailFormParameter, accountType.ToString(), generatedPassword);
+                (bool success, string message) = await userDAO.RegisterAccount(FullNameFormParameter, EmailFormParameter, accountType.ToString(), generatedPassword);
                 Message = message;
                 if (success)
                 {
                     ClientAccount account = new ClientAccount
                     {
+                        FullName = FullNameFormParameter,
                         Email = EmailFormParameter,
                         Role = accountType,
                         Status = AccountStatus.Active
@@ -98,7 +100,28 @@ namespace MelissandreDepartment.ViewModel
 
         private bool CanAddAccount()
         {
-            return RoleFormParameter.HasValue && IsValidEmail(EmailFormParameter);
+            return RoleFormParameter.HasValue && !String.IsNullOrEmpty(FullNameFormParameter) && IsValidEmail(EmailFormParameter);
+        }
+
+        protected async void DeleteAccount(object parameter)
+        {
+            ClientAccount account = parameter as ClientAccount;
+            if (account != null)
+            {
+                //Implement DAO logic
+                (bool success, string message) = await HttpClientUserDAO.Instance.DeleteAccount(account.Email, account.Role.ToString());
+
+                if (success)
+                {
+                    Accounts.Remove(account);
+                }
+
+                Message = message;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

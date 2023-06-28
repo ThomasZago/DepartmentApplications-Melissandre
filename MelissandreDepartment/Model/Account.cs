@@ -10,8 +10,11 @@ namespace MelissandreDepartment.Model
     public abstract class Account
     {
         public string Id { get; set; }
+
+        public string FullName { get; set; }
         public string Email { get; set; }
         public AccountStatus Status { get; set; }
         public bool IsSelected { get; set; }
+        public virtual Enum Role { get; set; }
     }
 }

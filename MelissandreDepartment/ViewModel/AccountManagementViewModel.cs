@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Data;
 using MelissandreDepartment.DAO;
 using MelissandreDepartment.Model; // Assuming the Account class is in the MelissandreDepartment.Model namespace
@@ -17,10 +18,12 @@ namespace MelissandreDepartment.ViewModel
     public abstract class AccountManagementViewModel : INotifyPropertyChanged
     {
         protected HttpClientUserDAO userDAO;
-        public RelayCommand DeleteAccountCommand { get; set; }
         public RelayCommand SendNewPasswordCommand { get; set; }
         public RelayCommand ActivateAccountsCommand { get; set; }
         public RelayCommand DeactivateAccountsCommand { get; set; }
+        public RelayCommand AddAccountCommand { get; set; }
+        public RelayCommand GetClientCommand { get; set; }
+        public RelayCommand DeleteAccountCommand { get; set; }
 
         private String message;
         public String Message
@@ -41,6 +44,17 @@ namespace MelissandreDepartment.ViewModel
             {
                 emailFormParameter = value;
                 OnPropertyChanged(nameof(EmailFormParameter));
+            }
+        }
+
+        private String fullNameFormParameter;
+        public String FullNameFormParameter
+        {
+            get { return String.IsNullOrEmpty(fullNameFormParameter) ? String.Empty : fullNameFormParameter; }
+            set
+            {
+                fullNameFormParameter = value;
+                OnPropertyChanged(nameof(FullNameFormParameter));
             }
         }
 
@@ -73,7 +87,6 @@ namespace MelissandreDepartment.ViewModel
             Accounts = new ObservableCollection<Account>();
             AccountsView = CollectionViewSource.GetDefaultView(Accounts);
             SendNewPasswordCommand = new RelayCommand((o) => SendNewPassword(o));
-            DeleteAccountCommand = new RelayCommand((o) => DeleteAccount(o)); 
             ActivateAccountsCommand = new RelayCommand(o => ActivateAccounts(), o => CanActivateOrDeactivateAccounts());
             DeactivateAccountsCommand = new RelayCommand(o => DeactivateAccounts(), o => CanActivateOrDeactivateAccounts());
         }
@@ -139,39 +152,84 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-
-        protected void DeleteAccount(object parameter)
-        {
-            Account account = parameter as Account;
-            if (account != null)
-            {
-                //Implement DAO logic
-                Accounts.Remove(account);
-            }
-            else
-            { 
-                throw new NotImplementedException();
-            }
-        }
-
-        protected void ActivateAccounts()
+        protected async void ActivateAccounts()
         {
             List<Account> selectedAccounts = GetSelectedAccounts();
-            //Implement DAO logic
+            // Implement DAO logic
             foreach (Account account in selectedAccounts)
             {
                 account.Status = AccountStatus.Active;
+
+                if (account is ClientAccount clientAccount)
+                {
+                    try
+                    {
+                        (bool success, string message) = await userDAO.ActivateAccount(clientAccount.Email, clientAccount.Role.ToString(), true);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message;
+                    }
+                }
+                else if (account is DepartmentAccount departmentAccount)
+                {
+
+                    try
+                    {
+                        (bool success, string message) = await userDAO.ActivateAccount(departmentAccount.Email, departmentAccount.Role.ToString(), true);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message;
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             AccountsView.Refresh();
         }
 
-        protected void DeactivateAccounts()
+        protected async void DeactivateAccounts()
         {
             List<Account> selectedAccounts = GetSelectedAccounts();
-            //Implement DAO logic
+
+            // Implement DAO logic
             foreach (Account account in selectedAccounts)
             {
                 account.Status = AccountStatus.Inactive;
+
+                if (account is ClientAccount clientAccount)
+                {
+                    try
+                    {
+                        (bool success, string message) = await userDAO.DeactivateAccount(clientAccount.Email, clientAccount.Role.ToString(), false);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message;
+                    }
+                }
+                else if (account is DepartmentAccount departmentAccount)
+                {
+                    try
+                    {
+                        (bool success, string message) = await userDAO.DeactivateAccount(departmentAccount.Email, departmentAccount.Role.ToString(), false);
+                        Message = message;
+                    }
+                    catch (Exception ex)
+                    {
+                        Message = message;
+                    }
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
             AccountsView.Refresh();
         }

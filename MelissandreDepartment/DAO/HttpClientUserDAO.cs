@@ -17,7 +17,6 @@ namespace MelissandreDepartment.DAO
 {
     public class HttpClientUserDAO
     {
-        private HttpClientUserDAO userDAO;
         private static HttpClientUserDAO _instance;
         private static readonly object _lockObject = new object();
 
@@ -76,15 +75,15 @@ namespace MelissandreDepartment.DAO
             }
         }
 
-        public async Task<(bool success, string message, List<ClientAccount> clients)> GetClients()
+        public async Task<(bool success, string message, List<Account> clients)> GetClients(List<string> requestedTypes)
         {
-            List<ClientAccount> clients = new List<ClientAccount>();
+            List<Account> clients = new List<Account>();
             bool successState = true;
             string message = string.Empty;
 
             try
             {
-                foreach (ClientAccountType type in Enum.GetValues(typeof(ClientAccountType)))
+                foreach (var type in requestedTypes)
                 {
                     string requestUrl = $"{HttpClientManager.ApiUrl}/auth/get/{type}";
                     HttpResponseMessage response = await HttpClientManager.HttpClient.GetAsync(requestUrl);
@@ -92,29 +91,65 @@ namespace MelissandreDepartment.DAO
                     if (response.IsSuccessStatusCode)
                     {
                         string jsonContent = await response.Content.ReadAsStringAsync();
-                        JArray jsonArray = JArray.Parse(jsonContent);
 
-                        // Extract the necessary information from the JSON array
-                        foreach (JObject jsonObject in jsonArray)
+                        // Check if the JSON content is empty or null
+                        if (string.IsNullOrEmpty(jsonContent))
                         {
-                            string typeString = jsonObject.Value<string>("type");
-                            if (Enum.TryParse(typeString, out ClientAccountType parsedType))
+                            message += $"Empty JSON response for type: {type}\n";
+                        }
+                        else
+                        {
+                            JArray jsonArray = JArray.Parse(jsonContent);
+
+                            // Check if the JSON array is empty
+                            if (jsonArray.Count == 0)
                             {
-                                if (parsedType == type)
-                                {
-                                    ClientAccount client = new ClientAccount
-                                    {
-                                        Email = jsonObject.Value<string>("email"),
-                                        Role = parsedType,
-                                        Status = AccountStatus.Active
-                                        // Set other properties as needed
-                                    };
-                                    clients.Add(client);
-                                }
+                                message += $"No account found for type: {type}\n";
                             }
                             else
                             {
-                                throw new Exception($"Invalid client account type: {typeString}");
+                                // Extract the necessary information from the JSON array
+                                foreach (JObject jsonObject in jsonArray)
+                                {
+                                    string typeString = jsonObject.Value<string>("type");
+
+                                    if (Enum.TryParse(typeString, out ClientAccountType parsedClientType))
+                                    {
+                                        if (parsedClientType.ToString() == type)
+                                        {
+                                            ClientAccount client = new ClientAccount
+                                            {
+                                                FullName = jsonObject.Value<string>("fullname"),
+                                                Email = jsonObject.Value<string>("email"),
+                                                Role = parsedClientType,
+                                                Status = AccountStatus.Active
+                                                // Set other properties as needed
+                                            };
+
+                                            clients.Add(client);
+                                        }
+                                    }
+                                    else if (Enum.TryParse(typeString, out DepartmentAccountType parsedDepartmentType))
+                                    {
+                                        if (parsedDepartmentType.ToString() == type)
+                                        {
+                                            DepartmentAccount client = new DepartmentAccount
+                                            {
+                                                FullName = jsonObject.Value<string>("fullname"),
+                                                Email = jsonObject.Value<string>("email"),
+                                                Role = parsedDepartmentType,
+                                                Status = AccountStatus.Active
+                                                // Set other properties as needed
+                                            };
+
+                                            clients.Add(client);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        throw new Exception($"Invalid account type: {typeString}");
+                                    }
+                                }
                             }
                         }
                     }
@@ -124,16 +159,25 @@ namespace MelissandreDepartment.DAO
                         message += $"{response.StatusCode} : {response.ReasonPhrase}\n";
                     }
                 }
-            }
 
-            catch (HttpRequestException exception)
+                // Check if no accounts were found for any requested type
+                if (clients.Count == 0 && !string.IsNullOrEmpty(message))
+                {
+                    message = $"No accounts found for the requested types: {string.Join(", ", requestedTypes)}";
+                }
+            }
+            catch (Exception ex)
             {
                 successState = false;
-                message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+                message = ex.Message;
             }
 
             return (successState, message, clients);
         }
+
+
+
+
 
         public async Task<(bool success, string message)> SendNewPassword(string email, string type)
         {
@@ -171,10 +215,10 @@ namespace MelissandreDepartment.DAO
             }
         }
 
-        public async Task<(bool success, string message)> RegisterAccount(string email, string type, string generatedPassword)
+        public async Task<(bool success, string message)> RegisterAccount(string fullname, string email, string type, string generatedPassword)
         {
             Dictionary<string, string> requestData = new Dictionary<string, string>();
-            requestData["fullname"] = String.Empty;
+            requestData["fullname"] = fullname;
             requestData["email"] = email;
             requestData["password"] = generatedPassword;
             requestData["type"] = type;
@@ -218,5 +262,50 @@ namespace MelissandreDepartment.DAO
             }
         }
 
+        public async Task<(bool success, string message)> DeleteAccount(string email, string type)
+        {
+            Dictionary<string, string> requestData = new Dictionary<string, string>();
+            requestData["email"] = email;
+            requestData["type"] = type;
+
+            string requestUrl = $"{HttpClientManager.ApiUrl}/auth/delete/Users";
+            try
+            {
+
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, requestUrl);
+                string jsonContent = JsonConvert.SerializeObject(requestData);
+                request.Content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                // Send the request
+                HttpResponseMessage response = await HttpClientManager.HttpClient.SendAsync(request);
+                String message = "";
+
+                if (response.IsSuccessStatusCode)
+                {
+                    message = $"You successfully deleted the account {email} of type {type}";
+                }
+                else
+                {
+                    message = response.StatusCode + " : " + response.ReasonPhrase;
+                }
+
+                return (response.IsSuccessStatusCode, message);
+            }
+            catch (HttpRequestException exception)
+            {
+                String message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+                return (false, message);
+            }
+        }
+
+        internal Task<(bool success, string message)> ActivateAccount(string email, string v1, bool v2)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal Task<(bool success, string message)> DeactivateAccount(string email, string v1, bool v2)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
