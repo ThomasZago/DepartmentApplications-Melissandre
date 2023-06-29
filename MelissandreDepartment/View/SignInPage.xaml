@@ -50,20 +50,19 @@
         </Grid>
 
 
-        <Border Style="{StaticResource CardBorderStyle}" Grid.Row="3" Grid.Column="1" Margin="0,5,0,15" Background="#F0F5FA">
-            <Grid >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="238"/>
-                    <ColumnDefinition Width="Auto" MinWidth="90.2"/>
-                </Grid.ColumnDefinitions>
-                <PasswordBox Grid.Column="0" Style="{StaticResource PasswordBoxStyle}" x:Name="PasswordBox" Margin="8,0,8,0" PasswordChar="•" tool:PasswordHelper.Attach="True"
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Style="{StaticResource LightTextStyle}" Text="PASSWORD"/>
+            <PasswordBox Grid.Row="1" Style="{StaticResource PasswordBoxStyle}" x:Name="PasswordBox" Margin="8,0" PasswordChar="•" tool:PasswordHelper.Attach="True"
                     tool:PasswordHelper.Password="{Binding Path=Password}" Visibility="{Binding PasswordBoxVisibility}"/>
-                <TextBox Style="{StaticResource TextBoxStyle}" Grid.Column="0" x:Name="PasswordTextBox" Margin="5,5,5,5" Visibility="{Binding TextBoxVisibility}" Text="{Binding Password}"/>
+            <!-- <TextBox Style="{StaticResource TextBoxStyle}" Grid.Column="0" x:Name="PasswordTextBox" Margin="5,5,5,5" Visibility="{Binding TextBoxVisibility}" Text="{Binding Password}"/> 
                 <CheckBox Grid.Column="1" x:Name="ShowPasswordCheckBox" Content="Show" Margin="5,5,5,5"
-              Command="{Binding DataContext.TogglePasswordVisibilityCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" Style="{StaticResource EyeCheckboxStyle}"/>
-            </Grid>
-        </Border>
-        <ComboBox Grid.Row="4" Grid.Column="1" SelectedItem="{Binding Type}" SelectedValue="Content" Style="{StaticResource ComboboxDepartmentAccountStyle}"/>
-        <Button Margin="0,5,0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN" Command="{Binding SignInCommand}"/>
+              Command="{Binding DataContext.TogglePasswordVisibilityCommand, RelativeSource={RelativeSource AncestorType={x:Type Page}}}" Style="{StaticResource EyeCheckboxStyle}"/>  -->
+        </Grid>
+        <ComboBox Grid.Row="4" Margin="0,15" Grid.Column="1" SelectedItem="{Binding Type}" SelectedValue="Content" Style="{StaticResource ComboboxDepartmentAccountStyle}"/>
+        <Button Margin="0,5" Grid.Row="5" Grid.Column="1" Style="{StaticResource CustomLargeButtonStyle}" Content="LOG IN" Command="{Binding SignInCommand}"/>
     </Grid>
 </Page>
