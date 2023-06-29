@@ -2,8 +2,8 @@
 {
     public enum ClientAccountType
     {
-        Client,
-        Restaurant,
-        Delivery
+        customer,
+        restaurant,
+        delivery
     }
 }

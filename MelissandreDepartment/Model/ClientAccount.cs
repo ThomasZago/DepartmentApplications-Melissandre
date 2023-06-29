@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MelissandreDepartment.Model
 {
-    internal class ClientAccount : Account
+    public class ClientAccount : Account
     {
         public ClientAccountType Role { get; set; }
     }

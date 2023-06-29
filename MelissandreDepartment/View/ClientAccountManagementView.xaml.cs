@@ -17,23 +17,21 @@ using System.Windows.Shapes;
 namespace MelissandreDepartment.View
 {
     /// <summary>
-    /// Logique d'interaction pour ServiceAccountManagementView.xaml
+    /// Logique d'interaction pour ClientAccountManagementView.xaml
     /// </summary>
-    public partial class ServiceAccountManagementView : Page
+    public partial class ClientAccountManagementView : Page
     {
-        private static ServiceAccountManagementView _instance;
+        private static ClientAccountManagementView _instance;
         private static readonly object _lockObject = new object();
 
-        private ServiceAccountManagementView()
+        private ClientAccountManagementView()
         {
             InitializeComponent();
-            dataGrid.BeginningEdit += DepartmentAccountManagementViewModel.Instance.DataGrid_BeginningEdit;
-            dataGrid.CellEditEnding += DepartmentAccountManagementViewModel.Instance.DataGrid_CellEditEnding;
-
-
+            dataGrid.BeginningEdit += ClientAccountManagementViewModel.Instance.DataGrid_BeginningEdit;
+            dataGrid.CellEditEnding += ClientAccountManagementViewModel.Instance.DataGrid_CellEditEnding;
         }
 
-        public static ServiceAccountManagementView Instance
+        public static ClientAccountManagementView Instance
         {
             get
             {
@@ -43,7 +41,7 @@ namespace MelissandreDepartment.View
                     {
                         if (_instance == null)
                         {
-                            _instance = new ServiceAccountManagementView();
+                            _instance = new ClientAccountManagementView();
                         }
                     }
                 }
