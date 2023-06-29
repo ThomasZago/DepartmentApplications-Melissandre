@@ -87,8 +87,8 @@ namespace MelissandreDepartment.ViewModel
             Accounts = new ObservableCollection<Account>();
             AccountsView = CollectionViewSource.GetDefaultView(Accounts);
             SendNewPasswordCommand = new RelayCommand((o) => SendNewPassword(o));
-            ActivateAccountsCommand = new RelayCommand(o => ActivateAccounts(), o => CanActivateOrDeactivateAccounts());
-            DeactivateAccountsCommand = new RelayCommand(o => DeactivateAccounts(), o => CanActivateOrDeactivateAccounts());
+            ActivateAccountsCommand = new RelayCommand(o => ActivateAccounts(), o => CanChangeStatusAccounts());
+            DeactivateAccountsCommand = new RelayCommand(o => DeactivateAccounts(), o => CanChangeStatusAccounts());
         }
 
         protected bool IsValidEmail(string email)
@@ -158,14 +158,13 @@ namespace MelissandreDepartment.ViewModel
             // Implement DAO logic
             foreach (Account account in selectedAccounts)
             {
-                account.Status = AccountStatus.Active;
-
                 if (account is ClientAccount clientAccount)
                 {
                     try
                     {
-                        (bool success, string message) = await userDAO.ActivateAccount(clientAccount.Email, clientAccount.Role.ToString(), true);
+                        (bool success, string message) = await userDAO.ChangeStatusAccount(clientAccount.Email, clientAccount.Role.ToString(), true);
                         Message = message;
+                        account.Status = AccountStatus.Active;
                     }
                     catch (Exception ex)
                     {
@@ -177,8 +176,9 @@ namespace MelissandreDepartment.ViewModel
 
                     try
                     {
-                        (bool success, string message) = await userDAO.ActivateAccount(departmentAccount.Email, departmentAccount.Role.ToString(), true);
+                        (bool success, string message) = await userDAO.ChangeStatusAccount(departmentAccount.Email, departmentAccount.Role.ToString(), true);
                         Message = message;
+                        account.Status = AccountStatus.Active;
                     }
                     catch (Exception ex)
                     {
@@ -196,18 +196,16 @@ namespace MelissandreDepartment.ViewModel
         protected async void DeactivateAccounts()
         {
             List<Account> selectedAccounts = GetSelectedAccounts();
-
-            // Implement DAO logic
             foreach (Account account in selectedAccounts)
             {
-                account.Status = AccountStatus.Inactive;
 
                 if (account is ClientAccount clientAccount)
                 {
                     try
                     {
-                        (bool success, string message) = await userDAO.DeactivateAccount(clientAccount.Email, clientAccount.Role.ToString(), false);
+                        (bool success, string message) = await userDAO.ChangeStatusAccount(clientAccount.Email, clientAccount.Role.ToString(), false);
                         Message = message;
+                        account.Status = AccountStatus.Inactive;
                     }
                     catch (Exception ex)
                     {
@@ -218,8 +216,9 @@ namespace MelissandreDepartment.ViewModel
                 {
                     try
                     {
-                        (bool success, string message) = await userDAO.DeactivateAccount(departmentAccount.Email, departmentAccount.Role.ToString(), false);
+                        (bool success, string message) = await userDAO.ChangeStatusAccount(departmentAccount.Email, departmentAccount.Role.ToString(), false);
                         Message = message;
+                        account.Status = AccountStatus.Inactive;
                     }
                     catch (Exception ex)
                     {
@@ -234,7 +233,7 @@ namespace MelissandreDepartment.ViewModel
             AccountsView.Refresh();
         }
 
-        protected bool CanActivateOrDeactivateAccounts()
+        protected bool CanChangeStatusAccounts()
         {
             return GetSelectedAccounts().Any();
         }

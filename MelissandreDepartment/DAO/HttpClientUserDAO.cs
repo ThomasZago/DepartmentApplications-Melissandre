@@ -122,7 +122,7 @@ namespace MelissandreDepartment.DAO
                                                 FullName = jsonObject.Value<string>("fullname"),
                                                 Email = jsonObject.Value<string>("email"),
                                                 Role = parsedClientType,
-                                                Status = AccountStatus.Active
+                                                Status = jsonObject.Value<bool>("status")? AccountStatus.Active : AccountStatus.Inactive
                                                 // Set other properties as needed
                                             };
 
@@ -138,7 +138,7 @@ namespace MelissandreDepartment.DAO
                                                 FullName = jsonObject.Value<string>("fullname"),
                                                 Email = jsonObject.Value<string>("email"),
                                                 Role = parsedDepartmentType,
-                                                Status = AccountStatus.Active
+                                                Status = jsonObject.Value<bool>("status") ? AccountStatus.Active : AccountStatus.Inactive
                                                 // Set other properties as needed
                                             };
 
@@ -298,14 +298,40 @@ namespace MelissandreDepartment.DAO
             }
         }
 
-        internal Task<(bool success, string message)> ActivateAccount(string email, string v1, bool v2)
+        public async Task<(bool success, string message)> ChangeStatusAccount(string email, string type, bool status)
         {
-            throw new NotImplementedException();
-        }
+            Dictionary<string, string> requestData = new Dictionary<string, string>();
+            requestData["email"] = email;
+            requestData["type"] = type;
+            requestData["status"] = status.ToString();
 
-        internal Task<(bool success, string message)> DeactivateAccount(string email, string v1, bool v2)
-        {
-            throw new NotImplementedException();
+            string requestUrl = $"{HttpClientManager.ApiUrl}/auth/modify/status";
+            try
+            {
+
+                string jsonContent = JsonConvert.SerializeObject(requestData);
+                HttpContent content = new StringContent(jsonContent.ToLower(), Encoding.UTF8, "application/json");
+
+                content.Headers.ContentType.CharSet = "UTF-8";
+                HttpResponseMessage response = await HttpClientManager.HttpClient.PutAsync(requestUrl, content);
+                String message = "";
+
+                if (response.IsSuccessStatusCode)
+                {
+                    message = $"You successfully updated the status of this account {email} of type {type}";
+                }
+                else
+                {
+                    message = response.StatusCode + " : " + response.ReasonPhrase;
+                }
+
+                return (response.IsSuccessStatusCode, message);
+            }
+            catch (HttpRequestException exception)
+            {
+                String message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+                return (false, message);
+            }
         }
     }
 }
