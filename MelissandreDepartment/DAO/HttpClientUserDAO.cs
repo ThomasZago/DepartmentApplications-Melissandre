@@ -119,6 +119,7 @@ namespace MelissandreDepartment.DAO
                                         {
                                             ClientAccount client = new ClientAccount
                                             {
+                                                Id = jsonObject.Value<string>("_id"),
                                                 FullName = jsonObject.Value<string>("fullname"),
                                                 Email = jsonObject.Value<string>("email"),
                                                 Role = parsedClientType,
@@ -175,9 +176,79 @@ namespace MelissandreDepartment.DAO
             return (successState, message, clients);
         }
 
+        public async Task<(bool success, string message)> PostNewFullName(string email, string type, string fullname)
+        {
+            string requestUrl = $"{HttpClientManager.ApiUrl}/auth/modify/fullname/";
 
+            try
+            {
+                Dictionary<string, string> requestData = new Dictionary<string, string>
+                    {
+                        { "email", email },
+                        { "type", type },
+                        {"fullname", fullname }
+                    };
 
+                string jsonContent = JsonConvert.SerializeObject(requestData);
+                HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
+                content.Headers.ContentType.CharSet = "UTF-8";
+                HttpResponseMessage response = await HttpClientManager.HttpClient.PutAsync(requestUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string message = $"New FullName post successfully to {email} of type {type}.";
+                    return (true, message);
+                }
+                else
+                {
+                    string message = $"Failed to send post FullName to {email} of type {type} : {response.StatusCode} : {response.ReasonPhrase}";
+                    return (false, message);
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                string message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+                return (false, message);
+            }
+        }
+
+        public async Task<(bool success, string message)> PostNewEmail(string email, string type, string newemail)
+        {
+            string requestUrl = $"{HttpClientManager.ApiUrl}/auth/modify/email/";
+
+            try
+            {
+                Dictionary<string, string> requestData = new Dictionary<string, string>
+                    {
+                        { "email", email },
+                        { "type", type },
+                        {"newemail", newemail }
+                    };
+
+                string jsonContent = JsonConvert.SerializeObject(requestData);
+                HttpContent content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+                content.Headers.ContentType.CharSet = "UTF-8";
+                HttpResponseMessage response = await HttpClientManager.HttpClient.PutAsync(requestUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string message = $"New Email post successfully to {email} of type {type}.";
+                    return (true, message);
+                }
+                else
+                {
+                    string message = $"Failed to post new Email to {email} of type {type} : {response.StatusCode} : {response.ReasonPhrase}";
+                    return (false, message);
+                }
+            }
+            catch (HttpRequestException exception)
+            {
+                string message = $"There was an error:\n{exception.Message}\nPlease, send this to your administrator.";
+                return (false, message);
+            }
+        }
 
         public async Task<(bool success, string message)> SendNewPassword(string email, string type)
         {

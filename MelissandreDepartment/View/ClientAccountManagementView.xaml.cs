@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MelissandreDepartment.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,8 @@ namespace MelissandreDepartment.View
         private ClientAccountManagementView()
         {
             InitializeComponent();
+            dataGrid.BeginningEdit += ClientAccountManagementViewModel.Instance.DataGrid_BeginningEdit;
+            dataGrid.CellEditEnding += ClientAccountManagementViewModel.Instance.DataGrid_CellEditEnding;
         }
 
         public static ClientAccountManagementView Instance

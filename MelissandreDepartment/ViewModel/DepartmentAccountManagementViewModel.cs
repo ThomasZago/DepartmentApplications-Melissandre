@@ -4,7 +4,9 @@ using MelissandreDepartment.Tool;
 using MelissandreServiceLibrary.Enum;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MelissandreDepartment.ViewModel
 {
@@ -44,6 +46,32 @@ namespace MelissandreDepartment.ViewModel
             GetClientCommand.Execute(this);
         }
 
+        public async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            var element = (e.EditingElement as TextBox).Text;
+            var header = e.Column.Header.ToString();
+
+            DepartmentAccount departmentAccount = (DepartmentAccount)EditedAccount;
+                switch (header)
+                {
+                    case "FullName":
+                        if (element != departmentAccount.FullName)
+                        {
+                            (bool success, string message) = await userDAO.PostNewFullName(departmentAccount.Email, departmentAccount.Role.ToString(), element);
+                            Message = message;
+                        }
+                        break;
+                    case "Email":
+                        if (element != departmentAccount.Email)
+                        {
+                            (bool success, string message) = await userDAO.PostNewEmail(departmentAccount.Email, departmentAccount.Role.ToString(), element);
+                            Message = message;
+                        }
+                        break;
+                        // Handle other columns specific to DepartmentAccount if needed
+                }
+            var _ = GetClientCommand.Execute;
+        }
 
         private async void AddAccount()
         {
@@ -126,6 +154,7 @@ namespace MelissandreDepartment.ViewModel
             {
                 Message = $"An error occurred while retrieving clients: {ex.Message}\nPlease send this to your administrator.";
             }
+            AccountsView.Refresh();
         }
     }
 }

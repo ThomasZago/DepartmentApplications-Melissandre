@@ -5,6 +5,7 @@ using MelissandreServiceLibrary.Enum;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace MelissandreDepartment.ViewModel
 {
@@ -41,6 +42,32 @@ namespace MelissandreDepartment.ViewModel
             GetClientCommand.Execute(this);
         }
 
+        public async void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            var element = (e.EditingElement as TextBox).Text;
+            var header = e.Column.Header.ToString();
+            ClientAccount clientAccount = (ClientAccount)EditedAccount;
+                switch (header)
+                {
+                    case "FullName":
+                        if (element != clientAccount.FullName)
+                        {
+                            (bool success, string message) = await userDAO.PostNewFullName(clientAccount.Email, clientAccount.Role.ToString(), element);
+                            Message = message;
+                        }
+                        break;
+                    case "Email":
+                        if (element != clientAccount.Email)
+                        {
+                            (bool success, string message) = await userDAO.PostNewEmail(clientAccount.Email, clientAccount.Role.ToString(), element);
+                            Message = message;
+                        }
+                        break;
+                        // Handle other columns specific to ClientAccount if needed
+                }
+            var _ = GetClientCommand.Execute;
+        }
+
         private async Task GetClient()
         {
             try
@@ -67,6 +94,7 @@ namespace MelissandreDepartment.ViewModel
             {
                 Message = $"An error occurred while retrieving clients: {ex.Message}\nPlease send this to your administrator.";
             }
+            AccountsView.Refresh();
         }
 
         protected async void AddAccount()

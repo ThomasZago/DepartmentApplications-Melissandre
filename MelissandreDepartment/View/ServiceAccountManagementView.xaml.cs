@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MelissandreDepartment.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,10 @@ namespace MelissandreDepartment.View
         private ServiceAccountManagementView()
         {
             InitializeComponent();
+            dataGrid.BeginningEdit += DepartmentAccountManagementViewModel.Instance.DataGrid_BeginningEdit;
+            dataGrid.CellEditEnding += DepartmentAccountManagementViewModel.Instance.DataGrid_CellEditEnding;
+
+
         }
 
         public static ServiceAccountManagementView Instance

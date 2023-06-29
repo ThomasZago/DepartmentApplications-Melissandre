@@ -7,7 +7,9 @@ using System.Reflection.Metadata;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Threading;
 using MelissandreDepartment.DAO;
 using MelissandreDepartment.Model; // Assuming the Account class is in the MelissandreDepartment.Model namespace
 using MelissandreDepartment.Tool;
@@ -24,6 +26,8 @@ namespace MelissandreDepartment.ViewModel
         public RelayCommand AddAccountCommand { get; set; }
         public RelayCommand GetClientCommand { get; set; }
         public RelayCommand DeleteAccountCommand { get; set; }
+
+        protected Account EditedAccount { get; set; }
 
         private String message;
         public String Message
@@ -77,6 +81,43 @@ namespace MelissandreDepartment.ViewModel
             {
                 accountsView = value;
                 OnPropertyChanged(nameof(AccountsView));
+            }
+        }
+        private bool isDataGridReadOnly = false;
+
+        public bool IsDataGridReadOnly
+        {
+            get { return isDataGridReadOnly; }
+            set
+            {
+                isDataGridReadOnly = value;
+                OnPropertyChanged(nameof(IsDataGridReadOnly));
+            }
+        }
+
+        public void DataGrid_BeginningEdit(object sender, DataGridBeginningEditEventArgs e)
+        {
+            if (e.Row.Item is ClientAccount clientAccount)
+            {
+                EditedAccount = new ClientAccount()
+                {
+                    FullName = clientAccount.FullName,
+                    Email = clientAccount.Email,
+                    Role = clientAccount.Role
+                };
+            }
+            else if (e.Row.Item is DepartmentAccount departmentAccount)
+            {
+                EditedAccount = new DepartmentAccount()
+                {
+                    FullName = departmentAccount.FullName,
+                    Email = departmentAccount.Email,
+                    Role = departmentAccount.Role
+                };
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
 
