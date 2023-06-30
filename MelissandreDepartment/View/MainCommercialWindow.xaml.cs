@@ -29,7 +29,7 @@ namespace MelissandreDepartment.View
         private void InitializeNavigation()
         {
             Navigation.Instance.Initialize(mainFrame);
-            Navigation.Instance.NavigateTo("ClientAccountManagementView");
+            Navigation.Instance.NavigateTo("CommercialDashboardView");
         }
     }
 }

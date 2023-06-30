@@ -1,4 +1,5 @@
-﻿using MelissandreDepartment.Tool;
+﻿using MelissandreDepartment.DAO;
+using MelissandreDepartment.Tool;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,16 +8,17 @@ using System.Windows.Input;
 
 namespace MelissandreDepartment.ViewModel
 {
-    /*public class CommercialDashboardViewModel : INotifyPropertyChanged
+    public class CommercialDashboardViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        private static CommercialDashboardViewModel _instance;
+        private static readonly object _lockObject = new object();
         private double waitingPercentage;
         private double acceptedPercentage;
         private double onWayPercentage;
         private int transactionCount;
-        private ObservableCollection<double> transactionData;
-        private readonly IDAO dao;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private readonly HttpClientStatisticsDAO dao;
 
         public double WaitingPercentage
         {
@@ -58,35 +60,42 @@ namespace MelissandreDepartment.ViewModel
             }
         }
 
-        public ObservableCollection<double> TransactionData
+        public ICommand GetDataCommand { get; }
+
+
+        public static CommercialDashboardViewModel Instance
         {
-            get { return transactionData; }
-            set
+            get
             {
-                transactionData = value;
-                OnPropertyChanged(nameof(TransactionData));
+                if (_instance == null)
+                {
+                    lock (_lockObject)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new CommercialDashboardViewModel();
+                        }
+                    }
+                }
+                return _instance;
             }
         }
 
-        public ICommand GetDataCommand { get; }
-
-        public DashboardViewModel()
+        private CommercialDashboardViewModel()
         {
-            dao = new YourDAO(); // Replace YourDAO with the actual implementation of your DAO class
+            dao = HttpClientStatisticsDAO.Instance; // Replace YourDAO with the actual implementation of your DAO class
 
-            GetDataCommand = new RelayCommand(async () => await GetData(), () => true);
-
-            TransactionData = new ObservableCollection<double>();
+            GetDataCommand = new RelayCommand((o) => GetData());
 
             // Start the timer to fetch data every 30 seconds
-            var timer = new System.Timers.Timer(30000);
-            timer.Elapsed += async (sender, e) => await GetData();
-            timer.Start();
+            /*var timer = new System.Timers.Timer(30000);
+            timer.Elapsed += async (sender, e) => GetDataCommand.Execute;
+            timer.Start();*/
         }
 
-        private async Task GetData()
+        private async void GetData()
         {
-            try
+            /*try
             {
                 // Get the data from your DAO
                 var data = await dao.GetDashboardData();
@@ -102,8 +111,17 @@ namespace MelissandreDepartment.ViewModel
             {
                 // Handle the exception
                 Console.WriteLine($"An error occurred while retrieving data: {ex.Message}");
-            }
+            }*/
         }
-    }*/
+
+        /// <summary>
+        /// Raises OnPropertychangedEvent when property changes
+        /// </summary>
+        /// <param name="name">String representing the property name</param>
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+    }
 }
 
