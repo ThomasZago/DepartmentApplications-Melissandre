@@ -10,13 +10,7 @@
     <Compile Update="View\ClientAccountManagementView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="View\CommercialDashboardViewModel.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Update="View\MainTechnicalWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="View\ServerChartsView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="View\SignInPage.xaml.cs">
@@ -27,13 +21,7 @@
     <Page Update="View\ClientAccountManagementView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="View\CommercialDashboardViewModel.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="View\MainTechnicalWindow.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="View\ServerChartsView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\StartWindow.xaml">

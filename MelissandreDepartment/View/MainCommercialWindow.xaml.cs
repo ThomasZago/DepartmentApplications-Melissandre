@@ -31,5 +31,15 @@ namespace MelissandreDepartment.View
             Navigation.Instance.Initialize(mainFrame);
             Navigation.Instance.NavigateTo("CommercialDashboardView");
         }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                var tabItem = (TabItem)e.AddedItems[0];
+                var pageName = (string)tabItem.Tag;
+                Navigation.Instance.NavigateTo(pageName);
+            }
+        }
     }
 }

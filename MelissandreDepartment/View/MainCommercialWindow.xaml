@@ -4,15 +4,41 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MelissandreDepartment.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="MainCommercialWindow" Height="450" Width="800" MinHeight="600" MinWidth="450">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="95"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <materialDesign:Card Grid.Column="0" Margin="10,10">
+            <TabControl Width="Auto"
+                VerticalContentAlignment="Top" HorizontalAlignment="Right"
+                materialDesign:ColorZoneAssist.Mode="PrimaryMid"
+                 Style="{StaticResource MaterialDesignNavigationRailTabControl}"
+                 SelectionChanged="TabControl_SelectionChanged">
+                <TabItem Tag="ClientAccountManagementView">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="AccountGroup" />
+                            <TextBlock HorizontalAlignment="Center" Text="User" />
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+                <TabItem Tag="CommercialDashboardView">
+                    <TabItem.Header>
+                        <StackPanel Width="auto" Height="auto">
+                            <materialDesign:PackIcon Width="24" Height="24" HorizontalAlignment="Center" Kind="ChartAreaspline" />
+                            <TextBlock HorizontalAlignment="Center" Text="Recent" />
+                        </StackPanel>
+                    </TabItem.Header>
+                </TabItem>
+            </TabControl>
+        </materialDesign:Card>
         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <Frame Background="#F8F8F8"  x:Name="mainFrame"/>
+            <Frame Background="#F8F8F8" x:Name="mainFrame"/>
         </ScrollViewer>
     </Grid>
 </Window>
+
