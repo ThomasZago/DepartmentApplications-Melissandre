@@ -10,6 +10,9 @@
     <Compile Update="View\ClientAccountManagementView.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\LogsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\MainTechnicalWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -19,6 +22,9 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\ClientAccountManagementView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="View\LogsView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="View\MainTechnicalWindow.xaml">

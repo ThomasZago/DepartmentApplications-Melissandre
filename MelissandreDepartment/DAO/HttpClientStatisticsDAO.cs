@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MelissandreDepartment.DAO
 {
-    class HttpClientStatisticsDAO
+    public class HttpClientStatisticsDAO
     {
         private static HttpClientStatisticsDAO _instance;
         private static readonly object _lockObject = new object();

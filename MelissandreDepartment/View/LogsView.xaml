@@ -1,0 +1,32 @@
+﻿<Page x:Class="MelissandreDepartment.View.LogsView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:MelissandreDepartment.View"
+        xmlns:model="clr-namespace:MelissandreDepartment.Model"
+        xmlns:vm="clr-namespace:MelissandreDepartment.ViewModel"
+        Title="LogsView" Height="450" Width="800"
+        DataContext="{Binding Source={x:Static vm:LogsViewModel.Instance}}">
+    <Grid>
+        <TabControl ItemsSource="{Binding Logs}" SelectedItem="{Binding SelectedLog}"
+            materialDesign:ColorZoneAssist.Background="Crimson"
+            materialDesign:ColorZoneAssist.Foreground="White"
+            materialDesign:ColorZoneAssist.Mode="Custom"
+            Style="{StaticResource MaterialDesignFilledTabControl}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding ContainerName}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <TextBlock Text="{Binding LogContent}" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    </ScrollViewer>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+
+
+    </Grid>
+</Page>
